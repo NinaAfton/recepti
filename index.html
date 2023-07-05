@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap");
+
+        * {
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::-webkit-scrollbar-track {
+            border-radius: 10px;
+            background-color: rgb(245, 245, 245);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            background-color: #ffffff;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+            background-color: #989898;
+        }
+
+        body {
+            background-color: rgb(240, 240, 240);
+        }
+
+        div.container {
+            flex-direction: column;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 20px;
+
+        }
+
+        div.card {
+            transition: opacity 0.2s ease-out;
+            background-color: white;
+            width: 1024px;
+            height: 300px;
+            display: flex;
+            justify-content: flex-start;
+            border-radius: 25px;
+            gap: 10px;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+                rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
+            div.card.fade-out {
+                opacity: 0;
+            }
+
+        }
+
+        img {
+            height: 100%;
+            border-radius: 25px;
+
+            aspect-ratio: 1.5;
+            object-fit: cover
+        }
+
+        div.navbar {
+            background-color: rgb(50, 50, 50);
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: sticky;
+            top: 0px
+        }
+
+        div.navbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 1024px;
+        }
+
+        div.navbar-content h1 {
+            color: white;
+        }
+
+        button {
+            background-color: rgb(14, 118, 179);
+            color: white;
+            padding: 10px;
+            border-radius: 25px;
+            border: 0;
+            font-weight: bold;
+            cursor: pointer;
+            width: 150px;
+        }
+
+        input {
+            padding: 7px;
+            border-radius: 25px;
+            border: 1 px solid rgba(170, 170, 170, );
+        }
+
+        div.modal-background {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(50, 50, 50, 0.5);
+            z-index: 10;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div.modal {
+            padding: 10px;
+            background-color: white;
+            border-radius: 25px;
+            width: 1024px;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+        }
+
+        div.modal-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        div.header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        div.header span {
+            cursor: pointer;
+
+        }
+
+
+        div.card-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding: 15px;
+        }
+
+        .card .notes {
+            height: 100%;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="modal-background" id="modal">
+        <div class="modal">
+            <div class="header">
+                <h1>dodaj recept</h1>
+                <span onclick="closeModal()">X</span>
+            </div>
+            <form id="add-recepie">
+                <div class="modal-content">
+                    <label>Naziv recepta</label>
+                    <input name="naziv" required minlength="5" placeholder="recepta..." />
+                    <label>Povezava do slike</label>
+                    <input name="link" required minlength="5" placeholder="povezava do slike..." />
+                    <label>opis</label>
+                    <input name="notes" required minlength="5" placeholder="Opis..." />
+                    <button>Dodaj</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+
+
+    <div class="navbar">
+        <div class="navbar-content">
+            <h1>Recepti</h1>
+            <div>
+                <button onclick="openModal()">Dodaj recep</button>
+                <input id="search" placeholder="išči..." />
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="List">
+        <div class="card">
+            <img
+                src="https://www.wholesomeyum.com/wp-content/uploads/2017/03/wholesomeyum-Low-Carb-Keto-Pancakes-Recipe-21.jpg" />
+            <div class="card-content">
+                <div class="header">
+                    <h1>palučinke</h1>
+                    <span onclick="deleteRecepie(this)">X</span>
+                </div>
+                <div class="notes">
+                    V skledo stresemo moko. Dodamo soli in sladkor, dobro premešamo in na sredini naredimo
+                    jamico. V
+                    jamico
+                    ubijemo jajci ter prilijemo približno 50 ml mleka in eno žlico olja.
+
+                    Sestavine v jamici pričnemo mešati z ročno metlico ali mešalnikom in med mešanjem
+                    postopoma
+                    zajemamo moko
+                    okoli jamice. Mešamo tako dolgo, da v zmes vmešamo vso moko (po potrebi prilijemo še
+                    malo mleka)
+                    ter dobimo
+                    gladko in gosto zmes brez grudic.
+
+                    Nato med nenehnim mešanjem v tankem curku v skledo počasi vlivamo preostalo mleko. Ko
+                    prilijemo
+                    vse mleko in
+                    dobimo gladko in tekoče testo, prenehamo z mešanjem. Masa mora biti tekoča, vendar ne
+                    sme biti
+                    vodena. Če je
+                    vodena, dodamo še malo moke.
+
+                    Pripravljeno maso pred peko pustimo počivati 15 do 30 minut, da lahko škrobna zrnca v
+                    tekočini
+                    nabreknejo.
+                    Pred peko jo obvezno še enkrat dobro premešamo.Nato med nenehnim mešanjem v tankem curku v
+                    skledo počasi vlivamo preostalo mleko. Ko
+                    prilijemo
+                    vse mleko in
+                    dobimo gladko in tekoče testo, prenehamo z mešanjem. Masa mora biti tekoča, vendar ne
+                    sme biti
+                    vodena. Če je
+                    vodena, dodamo še malo moke.
+
+                    Pripravljeno maso pred peko pustimo počivati 15 do 30 minut, da lahko škrobna zrnca v
+                    tekočini
+                    nabreknejo.
+                    Pred peko jo obvezno še enkrat dobro premešamo.
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTziN0htZQ0sUFTCWVGN8iYHUajYjSeAOGgng&usqp=CAU" />
+            <div class="card-content">
+                <div class="header">
+                    <h1>Kuksi</h1>
+                    <span onclick="deleteRecepie(this)">X</span>
+                </div>
+                <div class="notes">
+                    Vse našteto stresi v posodo in zmešaj v enotno maso. Iz nje oblikuj kepo, ki jo malce sploščiš
+                    in zaviješ v prozorno folijo za živila.
+                    Testo za 20 minut postavi v hladilnik.
+                    Pripravi površino za množično izdelovanje piškotov. Pomokaj jo in na njej razvaljaj piškotno
+                    maso do debeline približno 3 mm.
+                    Pograbi poljubne piškotne modelčke in z njimi iz povaljane mase iztisni surove piškote.
+                    Razporedi jih po pekaču, prekritem s papirjem za peko in jih prepusti mojstrici pečici, ki iz
+                    njih v neverjetnih 5-6 minutah pri 180 ºC naredi prave pravcate piškote!Vse našteto stresi v
+                    posodo in zmešaj v enotno maso. Iz nje oblikuj kepo, ki jo malce sploščiš
+                    in zaviješ v prozorno folijo za živila.
+                    Testo za 20 minut postavi v hladilnik.
+                    Pripravi površino za množično izdelovanje piškotov. Pomokaj jo in na njej razvaljaj piškotno
+                    maso do debeline približno 3 mm.
+                    Pograbi poljubne piškotne modelčke in z njimi iz povaljane mase iztisni surove piškote.
+                    Razporedi jih po pekaču, prekritem s papirjem za peko in jih prepusti mojstrici pečici, ki iz
+                    njih v neverjetnih 5-6 minutah pri 180 ºC naredi prave pravcate piškote!</div>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://oblizniprste.si/wp-content/uploads/2022/11/Domaca-goveja-juha8.jpg" />
+            <div class="card-content">
+                <div class="header">
+                    <h1>Goveja juha</h1>
+                    <span onclick="deleteRecepie(this)">X</span>
+                </div>
+                <div class="notes">
+                    Domača goveja juha ima par malih skrivnosti, bo res dobra. Prva je, da vzamemo zanjo kosti (po
+                    možnosti z mozgom) in kvalitetno meso: to pomeni, da vsebuje maščobo in če je le mogoče, da je
+                    meso kvalitetne, pašne reje. Kajti večina okusa se skriva v kosteh in maščobi. Le manjši del v
+                    samem rodem mesu.
+                    Druga pa je v dosti zelenjave. Korenček in “požgana” čebula data res pravo barvo ter okus. Potem
+                    pa še dosti zelene zelenjave: peteršilj, zelena (listna in stebelna), por, luštrek. Ter seveda
+                    gomolj zelene in česen.
+                    Domača goveja juha
+                    V hladno vodo damo najprej opran in očiščen korenček, prav tako si pripravimo vso ostalo
+                    zelenjavo (operemo, očistimo vseh nepravilnosti).
+                    Nato damo, prav tako v mrzlo vodo, meso in kosti, ter vso ostalo zelenjavo. Čebulo popečemo oli
+                    na ognju od plina ali v ponvi.
+                    Domača goveja juha
+                    Čisto počasi vse skupaj zavremo. To traja kar nekaj časa (vsaj 30 minut), a je zelo pomembno,
+                    saj tako nimamo pen od prehitrega segrevanja mesa.
+                    Domača goveja juha
+                    Domača goveja juha
+                    Ko juha res čisto po malem vre (babice so govorile, da mora juha vreti tako, da bi se dve
+                    gospodinji kregali med seboj: ker bi ena trdila, da juha vre, druga pa bi rekla, da juha ne vre)
+                    ji dodamo še žlico domače začimbne mešanice in sol. Ter pustimo, da domača goveja juha vre tako
+                    približno 4 ure.
+                    Domača goveja juha
+                    Šele po tem času se bo iz kosti, maščobe, zelenjave in mesa razvil res polni okus.
+                    Domača goveja juha
+                    Sedaj poberemo iz juhe vso zelenjavo razen korenčka in jo pustimo vreti še pol ure do eno uro.
+                    Domača goveja juhas
+                    Bistra, božansko okusna, domača goveja juha je tako kuhana in jo lahko postrežemo takoj z
+                    raznovrstno zakuho: rezanci, vlivanci, ribanci, narezane palačinke, itd.</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var iskanje = document.getElementById("search");
+    var dodajForm = document.getElementById("add-recepie");
+    var modal = document.getElementById("modal")
+    var List = document.getElementById("List");
+
+    window.addEventListener("load", renderList);
+    iskanje.addEventListener('keyup', function (event) {
+        var vrednostIskanja = event.target.value.toLowerCase();
+        var recepti = document.getElementsByClassName("card");
+        for (var recept of recepti) {
+            var nazivRecepta = recept.getElementsByTagName("h1")[0].innerHTML.toLowerCase();
+            var prikazi = nazivRecepta.includes(vrednostIskanja);
+            if (prikazi) {
+                recept.style.display = "flex";
+            } else {
+                recept.style.display = "none";
+            }
+        }
+    });
+    dodajForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var naziv = event.srcElement.elements["naziv"].value;
+        var link = event.srcElement.elements["link"].value;
+        var notes = event.srcElement.elements["notes"].value;
+
+        List.innerHTML += `
+        <div class="card">
+            <img 
+             src=" ${link}"
+             />
+            <div class="card-content">
+                <div class="header">
+                  <h1>${naziv}</h1>
+                  <span onclick="deleteRecepie(this)">X</span>
+                </div>
+                <div class="notes">
+                    ${notes}
+                </div>
+            </div>
+        </div>
+        
+        `;
+        event.srcElement.reset();
+        closeModal();
+        saveList();
+
+    });
+
+    function deleteRecepie(element) {
+        var potrdi = confirm("Ali ste prepričani ,da želite izbrisati recept?");
+        if (potrdi) {
+
+            var kartica = element.parentNode.parentNode.parentNode;
+            kartica.classList.add("fade-out");
+            setTimeout(function () {
+                kartica.remove();
+                saveList();
+            }, 200);
+        }
+    }
+    function openModal() {
+        modal.style.display = "flex";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
+    function saveList() {
+        localStorage.setItem("List", List.innerHTML);
+    }
+
+    function renderList() {
+        var novList = localStorage.getItem("List");
+        if (novList) {
+            List.innerHTML = novList;
+            var vrednostIskanja = event.target.value.toLowerCase();
+            var recepti = document.getElementsByClassName("card");
+            for (var recept of recepti) {
+                recept.style.display = "flex";
+
+            }
+
+        }
+
+    }
+
+</script>
+
+</html>
